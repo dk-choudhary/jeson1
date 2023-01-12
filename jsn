@@ -1,0 +1,46 @@
+
+
+
+
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class Thspeakapi {
+    public static void main(String[] args) {
+        try {
+            URL url = new URL("https://api.thingspeak.com/channels/875453/feeds.json?api_key=1DSQ7R1XTT1OK0Z1&results=20");
+            HttpURLConnection urlcon = (HttpURLConnection) url.openConnection();
+            urlcon.setRequestMethod("GET");
+            InputStreamReader in = new InputStreamReader(urlcon.getInputStream());
+            BufferedReader in1 = new BufferedReader(in);
+            String dt;
+            String dss = null;
+            while ((dt = in1.readLine()) != null) {
+                dss = dt;
+            }
+            JSONParser par = new JSONParser();
+            JSONObject obj1 = (JSONObject) par.parse(dss);
+            JSONObject obj2 = (JSONObject)obj1.get("channel");
+            System.out.println("Name= "+obj2.get("name"));
+            System.out.println("Id= "+obj2.get("id"));
+            System.out.println("Field1= "+obj2.get("field1"));
+            JSONArray array1 = (JSONArray) obj1.get("feeds");
+            for (int i = 0; i < array1.size(); i++)
+            {
+                JSONObject ob3 = (JSONObject) array1.get(i);
+                System.out.println("Fild1= "+ob3.get("field1"));
+            }
+            urlcon.disconnect();
+        } catch (Exception e){
+            System.out.println("e");
+        }
+
+    }
+}
